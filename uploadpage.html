@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>uploadpage</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: aquamarine;
+        }
+        button:hover{
+            cursor: pointer;
+        }
+
+        .filldata {
+            display: flex;
+            justify-content: center;
+            font-size: xx-large;
+            width: 100%;
+        }
+
+        .inpclass {
+            width: 600px;
+            border: gray 1px solid;
+            resize: none;
+            padding: 20px;
+            font-size: x-large;
+            border-radius: 30px;
+            background-color: rgb(255, 255, 255);
+        }
+
+        .imagesDivStyle {
+            width: 200px;
+            height: 180px;
+            /* border: 4px rgb(39, 3, 3) solid; */
+            border-radius: 20px;
+
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .imgs {
+            height: 180px;
+            width: 200px;
+            border: 4px black solid;
+
+            border-radius: 8px;
+        }
+
+        label {
+            display: inline-block;
+            width: 120px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 600px;
+            border: gray 1px solid;
+            resize: none;
+            padding: 8px;
+        }
+
+        select {
+            width: 620px;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        .pointers {
+            border: 1px darkslateblue dashed;
+        }
+
+        #pdlab {
+            height: 100px;
+            vertical-align: top;
+        }
+
+        #addprodbtn,
+        #selimgsbtn,
+        #resetbtn {
+            float: right;
+            margin-left: 10px;
+        }
+
+        #controldiv button {
+            font-size: x-large;
+            background-color: aqua;
+            border-radius: 8px;
+        }
+
+        #loadlab {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="filldata">
+        <div>
+            <label>Name</label><input class="inpclass" type="text" id="nameinp" required><br><br>
+            <label>RollNo.</label><input class="inpclass" type="text" id="rollinp" required><br><br>
+            <label>Price</label><input class="inpclass" type="number" id="priceinp" required><br><br>
+            <label>Email Id </label><input class="inpclass" type="text" id="emailinp" required><br><br>
+            <label>Category </label>
+            <select class="inpclass" id="catinp">
+                <option value="Keyboard">Keyboard</option>
+                <option value="Mouse">Mouse</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Cycle">Cycle</option>
+                <option value="Others">Others</option>
+            </select><br><br>
+
+
+
+            <div id="imagesDiv"></div>
+
+            <div id="controldiv">
+                <label></label><label id="loadlab"></label>
+                <button id="addprodbtn">Add Product</button>
+                <button id="selimgsbtn">Select Image</button>
+                <button type="reset" id="resetbtn">Reset</button>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        //-----------------References--------------------------------------//
+        //var uid=sessionStorage.getItem("uid");
+        var Files = [];
+        var FileReaders = [];
+        var ImageLinksArray = [];
+
+        const imgdiv = document.getElementById('imagesDiv');
+        const selBtn = document.getElementById('selimgsbtn');
+        const addBtn = document.getElementById('addprodbtn');
+        const proglab = document.getElementById('loadlab');
+
+
+        const name = document.getElementById('nameinp');
+        const rollno = document.getElementById('rollinp');
+        const email = document.getElementById('emailinp');
+        const category = document.getElementById('catinp');
+        const price = document.getElementById('priceinp');
+
+
+
+        function OpenFileDialog() {
+            let inp = document.createElement('input');
+            inp.type = 'file';
+            inp.multiple = 'multiple';
+
+            inp.onchange = (e) => {
+                AssignImgsToFilesArray(e.target.files);
+                CreateImgTags();
+            }
+            inp.click();
+        }
+
+        function AssignImgsToFilesArray(thefiles) {
+            let num = Files.length + thefiles.length;
+            let looplim = (num <= 1) ? thefiles.length : (10 - Files.length)
+
+            for (let i = 0; i < looplim; i++) {
+                Files.push(thefiles[i]);
+            }
+            if (num > 1) alert("only 1 image is allowed for now");
+        }
+
+        function CreateImgTags() {
+            imgdiv.innerHTML = '';
+            imgdiv.classList.add('imagesDivStyle');
+
+            for (let i = 0; i < Files.length; i++) {
+                FileReaders[i] = new FileReader();
+
+                FileReaders[i].onload = function () {
+                    var img = document.createElement('img');
+                    img.id = 'imgNo' + i;
+                    img.classList.add('imgs');
+                    img.src = FileReaders[i].result;
+                    imgdiv.append(img);
+                }
+                FileReaders[i].readAsDataURL(Files[i]);
+            }
+
+            // let lab=document.getElementById('label');
+            // lab.innerHTML='clear images';
+            // lab.style='cursor:pointer;display:block;color:navy;font-size:12px';
+            // lab.addEventListener('click',ClearImages);
+            // imgdiv.append(lab);
+
+            function ClearImages() {
+                Files = [];
+                ImageLinksArray = [];
+                imgdiv.innerHTML = "";
+                imgdiv.classList.remove('imagesDivStyle')
+            }
+        }
+
+        function getShortTitle() {
+            // let namey = name.value.substring(0, 50);
+            // return namey.replace(/[^a-zA-Z0-9]/g, "");
+        }
+
+        function GetImgUploadProgress() {
+            return "Uploading..."
+            // return 'Images Uploaded  ' + ImageLinksArray.length + '  of  ' + Files.length;
+        }
+
+        function IsAllImagesUploaded() {
+            return ImageLinksArray.length == Files.length;
+        }
+
+        function RestoreBack() {
+            selBtn.disabled = false;
+            addBtn.disabled = false;
+        }
+
+        // ---------------------EVENTS------------------------------------------//
+        selBtn.addEventListener('click', OpenFileDialog);
+        addBtn.addEventListener('click', UploadAllImages);
+        // addBtn.addEventListener('click', ()=>{
+        //     if(name!=null && rollno!=null && email!=null && category!=null && price!=null){
+        //     UploadAllImages;
+        //     }
+        //     else{
+        //         console.log("all fields are required")
+        //     }
+            
+        //     });
+
+
+        //--------upload image to firebase storage----------------------------------------//
+
+
+        function UploadAllImages() {
+            selBtn.disabled = true;
+            addBtn.disabled = true;
+            ImageLinksArray = [];
+
+            for (let i = 0; i < Files.length; i++) {
+                UploadAnImage(Files[i], i);
+            }
+        }
+
+        function UploadAnImage(imgToUpload, imgNo) {
+            const metadata = {
+                contentType: imgToUpload.type
+            };
+            var uid=sessionStorage.getItem("uid");
+            const storage = getStorage();
+
+            const ImageAddress = "Images/" + uid + "/img#" + (imgNo + 1);
+
+            const storageRef = sRef(storage, ImageAddress);
+
+            const UploadTask = uploadBytesResumable(storageRef, imgToUpload, metadata);
+
+            UploadTask.on('state_changed', (snapshot) => {
+                proglab.innerHTML = GetImgUploadProgress();
+            },
+                (error => {
+                    alert("error: image upload failed");
+                }),
+                () => {
+                    getDownloadURL(UploadTask.snapshot.ref).then((downloadURL) => {
+                        ImageLinksArray.push(downloadURL)
+                        if (IsAllImagesUploaded()) {
+                            proglab.innerHTML = "image uploaded";
+                            console.log("Images uploaded to the firebase storage")
+                            writeUserData(name, rollno, email, category, price,ImageLinksArray);
+                            //UploadAProduct();
+                        }
+                    })
+                }
+            );
+        }
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-app.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6wbrvtVgSgKS-2eolBQzX_AzDShPGNM0",
+            authDomain: "trial-44a22.firebaseapp.com",
+            databaseURL: "https://trial-44a22-default-rtdb.firebaseio.com",
+            projectId: "trial-44a22",
+            storageBucket: "trial-44a22.appspot.com",
+            messagingSenderId: "986784761160",
+            appId: "1:986784761160:web:8e00b3b3d83c29c3bf5f7d"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        //import firebase storage functions
+        import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from
+            "https://www.gstatic.com/firebasejs/9.9.2/firebase-storage.js"
+
+        //------------IMPORT DATABASE FUNCTIONS-----------------//
+
+        //Firebase Realtime Database
+
+        import { getDatabase, ref, set, child, get } from
+            "https://www.gstatic.com/firebasejs/9.9.2/firebase-database.js"
+
+        const realdb = getDatabase();
+
+        //-----------------UPLOAD A PRODUCT FUNCTION--------------
+
+
+        function writeUserData(name, rollno, email, category, price,ImageLinksArray) {
+            var uid=sessionStorage.getItem("uid");
+            console.log(uid);
+            set(ref(realdb, "users/" + uid, getShortTitle()), {
+                Name: name.value,
+                Category: category.value,
+                Email: email.value,
+                Price: price.value,
+                LinksOfImagesArray: ImageLinksArray
+            })
+            .then((result)=>{
+                console.log(result);
+                alert("upload successful");
+                console.log("product details uploaded to the realtime database");
+                window.location.href="specificuserpdtpage.html";
+            })
+
+            // alert("upload successful");
+            // console.log("product details uploaded to the realtime database");
+            // window.location.href="specificuserpdtpage.html";
+        }
+
+        // function UploadAProduct() {
+        //     set(ref(realdb, users/ + email, getShortTitle()), {
+        //         Name: name.value,
+        //         Category: category.value,
+        //         Email: email.value,
+        //         Price: price.value,
+        //         LinksOfImagesArray: ImageLinksArray
+        //     })
+
+        //     alert("upload successful");
+        //     console.log("product details uploaded to the realtime database");
+        // }
+
+    </script>
+
+</body>
+
+</html>

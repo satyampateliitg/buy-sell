@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <script src="signupform.js"></script>
+    <script src="https://kit.fontawesome.com/cb9933dfe7.js" crossorigin="anonymous"></script>
+    <!-- <script src="../scripts/firebase.js"></script> -->
+
+</head>
+<style>
+    body{
+        background-color: aquamarine;
+    }
+    .abv_btn{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+    }
+    #login{
+        background-color: blueviolet;
+        border-radius: 30px;
+        width: fit-content;
+        font-size:xx-large;
+        padding: 12px;
+    }
+    #login:hover{
+        background-color: yellow
+    }
+    h1{
+        text-align: center;
+    }
+    
+</style>
+<body>
+    <h1>This is the page for signup</h1>
+    <div class="abv_btn">
+        <button type="button" id="login">Sign in with google <span><i class="fa-brands fa-google"></i></span></button>
+    </div>
+
+    
+</body>
+
+<script type="module">
+
+
+
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.4/firebase-app.js";
+
+  import{getAuth,GoogleAuthProvider,signInWithRedirect,getRedirectResult,signInWithPopup} from  "https://www.gstatic.com/firebasejs/9.9.4/firebase-auth.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // const firebaseConfig = {
+  //   apiKey: "AIzaSyAHhzA6bT_SF0UHL2oChl9AkgYo5Z0OSLU",
+  //   authDomain: "integ-c14ed.firebaseapp.com",
+  //   databaseURL: "https://integ-c14ed-default-rtdb.firebaseio.com",
+  //   projectId: "integ-c14ed",
+  //   storageBucket: "integ-c14ed.appspot.com",
+  //   messagingSenderId: "966071054671",
+  //   appId: "1:966071054671:web:156512987f130c72a3d53a"
+  // };
+  const firebaseConfig = {
+    apiKey: "AIzaSyC6wbrvtVgSgKS-2eolBQzX_AzDShPGNM0",
+    authDomain: "trial-44a22.firebaseapp.com",
+    databaseURL: "https://trial-44a22-default-rtdb.firebaseio.com",
+    projectId: "trial-44a22",
+    storageBucket: "trial-44a22.appspot.com",
+    messagingSenderId: "986784761160",
+    appId: "1:986784761160:web:8e00b3b3d83c29c3bf5f7d"
+};
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth=getAuth(app);
+  const provider= new GoogleAuthProvider(app);
+
+//const database = firebase.database();
+
+//let logi=document.getElementById("login");
+// login.addEventListener('click',(e)=>{
+//   signInWithRedirect(auth,provider);
+//   getRedirectResult(auth)
+//   .then((result) => {
+//     // This gives you a Google Access Token. You can use it to access Google APIs.
+//     const credential = GoogleAuthProvider.credentialFromResult(result);
+//     const token = credential.accessToken;
+
+//     // The signed-in user info.
+//     const user = result.user;
+//   }).catch((error) => {
+//     // Handle Errors here.
+//     const errorCode = error.code;
+//     const errorMessage = error.message;
+//     // The email of the user's account used.
+//     const email = error.customData.email;
+//     // The AuthCredential type that was used.
+//     const credential = GoogleAuthProvider.credentialFromError(error);
+//     // ...
+//   });
+// })
+
+
+
+
+//const database = firebase.database();
+let user;
+let uid;
+
+//let logi=document.getElementById("login");
+login.addEventListener('click',(e)=>{
+  signInWithPopup(auth,provider)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access Google APIs.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    console.log(credential);
+    const token = credential.accessToken;
+
+    // The signed-in user info.
+    user = result.user;
+    uid=user.uid;
+    //storing a variable for future use
+    sessionStorage.setItem("uid",uid);
+    console.log(user);
+    console.log(user.email);
+    console.log(user.displayName);
+    console.log(user.uid);
+    console.log(token);
+
+    window.location.href="selorbuy.html";
+    
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+})
+
+
+
+// const firebaseConfig = {
+//   apiKey: "AIzaSyA-9XNM9rA4bf2VZWqzt2ZJLlswsicRbXs",
+//   authDomain: "abcd-a4eaa.firebaseapp.com",
+//   databaseURL: "https://abcd-a4eaa-default-rtdb.firebaseio.com",
+//   projectId: "abcd-a4eaa",
+//   storageBucket: "abcd-a4eaa.appspot.com",
+//   messagingSenderId: "500295823328",
+//   appId: "1:500295823328:web:44b61a8eca617801664585"
+// };
+
+// // Initiallize firebase
+// firebase.initializeApp(firebaseConfig);
+
+
+// var usersRef = firebase.database().ref('users');
+// function writeUserData() {
+//   var userid=document.getElementById("iitgid").value;
+//   var password=document.getElementById("password").value;
+//   console.log(userid,password);
+//   usersRef.push({userid,password});
+
+//  }
+
+
+
+// Sign up Function
+
+function Signup(){
+  var provider = new firebase.auth.GoogleAuthProvider();
+  firebase.auth()
+  .signInWithPopup(provider)
+  .then((result) => {
+    /** @type {firebase.auth.OAuthCredential} */
+    var credential = result.credential;
+
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    var token = credential.accessToken;
+    // The signed-in user info.
+    var user = result.user;
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // The email of the user's account used.
+    var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    var credential = error.credential;
+    // ...
+  });
+}
+
+// const signUp=()=>{
+//   const iitgid=document.getElementById("iitgid").value;
+//   const password=document.getElementById("password").value;
+//   console.log(iitgid,password);
+//   //firebase code
+//   firebase.auth().createUserWithEmailAndPassword(iitgid, password)
+//   .then((result) => {
+//       //Signed In
+//       window.location.href="signinform.html";
+//       //document.write("you are signed up");
+//       console.log(result);
+//   })
+//   .catch((error) => {
+//       console.log(error.code);
+//       console.log(error.message);
+//   });
+// }
+
+// //Sign In
+
+// const signIn=()=>{
+//   const iitgid=document.getElementById("iitgid").value;
+//   const password=document.getElementById("password").value;
+//   firebase.auth().signInWithEmailAndPassword(iitgid, password)
+//       .then((result) => {
+//           //Signed In
+//           document.write("you are signed in");
+//           console.log(result);
+//       })
+//       .catch((error) => {
+//         var errorCode = error.code;
+//         var errorMessage = error.message;
+//       });
+// }
+
+
+// const uploadIt=()=>{
+//   const name=document.getElementById("name").value;
+//   //const image=document.getElementById("pdtimage").value;
+//   const image=document.getElementById("pdtimage").files[0].name;
+//   const emailid=document.getElementById("emailid").value;
+//   const price=document.getElementById("price").value;
+//   console.log(name, emailid, image, price);
+//   function writeUserData(name, emailid, image, price) {
+//   console.log(name, emailid, image, price);
+//   firebase.database().ref('users/' + emailid).set({
+//       name: name,
+//       emailid: emailid,
+//       image: image,
+//       price:price
+      
+//     });
+    
+//   }
+// }
+
+// function writeUserData() {
+//   const pdtimage = document.getElementById("pdtimage").files[0].name;
+//   const name = document.getElementById("name").value;
+//   const rollno = document.getElementById("rollno").value;
+//   const emailid = document.getElementById("emailid").value;
+//   const price = document.getElementById("price").value;
+//   console.log(name, emailid, price,pdtimage);
+//   firebase.database().ref('users/' + rollno).set({
+//       name: name,
+//       emailid:emailid,
+//       price:price,
+//       pdtimage:pdtimage
+//   }).then(() => {
+//       console.log("data stored")
+//   }).catch((error) => {
+//       console.log(error);
+//       console.log(error.message)
+//   });
+// }
+</script>
+</html>
